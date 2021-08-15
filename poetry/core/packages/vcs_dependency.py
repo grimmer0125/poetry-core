@@ -33,10 +33,6 @@ class VCSDependency(Dependency):
         self._vcs = vcs
         self._source = source
 
-        if not any([branch, tag, rev]):
-            # If nothing has been specified, we assume master
-            branch = "master"
-
         self._branch = branch
         self._tag = tag
         self._rev = rev
