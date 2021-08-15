@@ -77,6 +77,8 @@ class VCSDependency(Dependency):
 
     @property
     def reference(self) -> str:
+        if not any([self._branch, self._tag, self._rev]):
+            return ""
         return self._branch or self._tag or self._rev
 
     @property
@@ -103,11 +105,12 @@ class VCSDependency(Dependency):
         if self.extras:
             requirement += "[{}]".format(",".join(self.extras))
 
+        reference_part = "@{}".format(self.reference) if self.reference else ""
         if parsed_url.protocol is not None:
-            requirement += " @ {}+{}@{}".format(self._vcs, self._source, self.reference)
+            requirement += " @ {}+{}{}".format(self._vcs, self._source, reference_part)
         else:
-            requirement += " @ {}+ssh://{}@{}".format(
-                self._vcs, parsed_url.format(), self.reference
+            requirement += " @ {}+ssh://{}".format(
+                self._vcs, parsed_url.format(), reference_part
             )
 
         return requirement
